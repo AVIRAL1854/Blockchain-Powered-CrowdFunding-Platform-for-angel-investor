@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSyncProviders } from "@/Components/hooks/useSyncProviders";
 import { formatAddress } from "@/Components/utils/index";
 
-export const DiscoverWalletProviders = () => {
+export const DiscoverWalletProviders = (setAccount) => {
   const [selectedWallet, setSelectedWallet] = useState<EIP6963ProviderDetail>();
   const [userAccount, setUserAccount] = useState<string>("");
   const providers = useSyncProviders();
@@ -16,7 +16,7 @@ export const DiscoverWalletProviders = () => {
 
       setSelectedWallet(providerWithInfo);
       setUserAccount(accounts?.[0]);
-      console.log(`this is the Account Address : `+(userAccount));
+      console.log(`this is the Account Address : ` + userAccount);
     } catch (error) {
       console.error(error);
     }
