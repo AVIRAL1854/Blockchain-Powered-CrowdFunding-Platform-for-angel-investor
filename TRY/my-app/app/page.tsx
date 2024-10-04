@@ -11,7 +11,7 @@ const CONTRACT_ABI = process.env.REACT_APP_CONTRACT_ABI;
 export default function Home() {
 
     const [account, setAccount] = useState<string>();
-    const contractAddress ="0xf5568af61b089440008183ef92a3296c075a8c15";
+    const contractAddress = "0xD8555E9A128C07928C1429D834640372C8381828";
     // const abi = abi;
 
     useEffect(()=>{
