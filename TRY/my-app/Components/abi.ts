@@ -3,55 +3,6 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "Campaigns",
-    outputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "title",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "descrption",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "target",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "deadline",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amountCollected",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "image",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "_owner",
         type: "address",
@@ -107,6 +58,55 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "Campaigns",
+    outputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "title",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "descrption",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "target",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "deadline",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountCollected",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "image",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "getCampaigns",
     outputs: [
@@ -158,7 +158,7 @@ export const abi = [
             type: "uint256[]",
           },
         ],
-        internalType: "struct CrowdFunding.Campaign[]",
+        internalType: "struct NewCrowdFunding.Campaign[]",
         name: "",
         type: "tuple[]",
       },
