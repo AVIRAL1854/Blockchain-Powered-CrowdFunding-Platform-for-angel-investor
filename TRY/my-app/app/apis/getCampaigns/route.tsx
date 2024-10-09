@@ -5,7 +5,7 @@ import { abi } from "@/Components/abi";
 // const infuraUrl = `https://mainnet.infura.io/v3/${process.env.API_KEY}`;
 const infuraUrl = "http://127.0.0.1:8545/";
 // const contractAddress = process.env.CONTRACT_ADDRESS;
-const contractAddress = "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c";
+const contractAddress = process.env.fake_contract_address;
 
 export async function GET(req: NextRequest) {
   const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
