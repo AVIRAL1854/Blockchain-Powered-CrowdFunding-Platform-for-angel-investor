@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { NextResponse,NextRequest } from "next/server";
 import {abi } from "@/Components/abi"
-
+// abi
 const infuraUrl = "http://127.0.0.1:8545/";
 const contractAddress=process.env.fake_contract_address;    
 
