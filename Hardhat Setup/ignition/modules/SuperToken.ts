@@ -15,6 +15,7 @@ const SuperTokenModule= buildModule("SuperTokenModule",(m)=>{
     const superToken=m.contract("SuperToken",[name, symbol,initialSupply, decimals]);
 
     console.log("this is the token address:"+ superToken.getAddress());
+    // the token address is same as contract address
     return {superToken};
 
 })
