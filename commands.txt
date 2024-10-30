@@ -1,0 +1,3 @@
+to run node --> npm hardhat node
+to compile --> npx hardhat compile
+to deploy --> npx hardhat ignition deploy ./ignition/modules/Lock.ts --network localhost
