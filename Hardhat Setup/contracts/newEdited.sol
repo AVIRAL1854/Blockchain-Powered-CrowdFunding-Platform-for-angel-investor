@@ -2,8 +2,13 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract EditedVeryCrowdFunding {
+contract EditedVeryCrowdFunding is Ownable(msg.sender) {
+    // constructor(address initialOwner) {
+
+    // }
+
     struct Campaign {
         address owner;
         string title;
@@ -80,7 +85,7 @@ contract EditedVeryCrowdFunding {
         IERC20 token = IERC20(_equityAddress);
         campaign.totalTokens = token.balanceOf(address(campaign.equityAddress));
         campaign.equityTokens = _equityTokens;
-        campaign.refunded=false;
+        campaign.refunded = false;
         //convert this into decimal values or floating value
         campaign.equityAddress = _equityAddress;
 
@@ -149,27 +154,21 @@ contract EditedVeryCrowdFunding {
             )
         );
 
-
         (bool sent, ) = payable(campaign.owner).call{value: amount}("");
-        require(sent,"payment failed");
+        require(sent, "payment failed");
 
         if (sent) {
             campaign.amountCollected = campaign.amountCollected + amount;
 
-
-            uint256 index=checkDonatorsList(msg.sender, _id);
-            if(index==type(uint256).max){
-
-            campaign.donators.push(msg.sender);
-            campaign.donations.push(amount);
-            }
-            else{
-                campaign.donators[index]=msg.sender;
-                campaign.donations[index]+=amount;
+            uint256 index = checkDonatorsList(msg.sender, _id);
+            if (index == type(uint256).max) {
+                campaign.donators.push(msg.sender);
+                campaign.donations.push(amount);
+            } else {
+                campaign.donators[index] = msg.sender;
+                campaign.donations[index] += amount;
             }
         }
-
-        
     }
 
     function getDonators(uint256 _id)
@@ -243,8 +242,14 @@ contract EditedVeryCrowdFunding {
         ) {
             // refund amount process  to be implemented here
             campaign.CampaignClose = true;
-            return
-                "minimum target  is not reached before deadline therefore you get your tokens back";
+            //    campaign.CampaignClose = true;
+            if (campaign.refunded == true) {
+                refundMoney(_campaignId);
+                return
+                    "minimum target  is not reached before deadline therefore you get your tokens back";
+            } else {
+                return " amount is already refunded check you profile";
+            }
         } else if (
             campaign.deadline >= block.timestamp &&
             campaign.amountCollected < campaign.target
@@ -291,11 +296,15 @@ contract EditedVeryCrowdFunding {
             campaign.amountCollected < campaign.target
         ) {
             // refund amount process  to be implemented here
-            
+
             campaign.CampaignClose = true;
-            refundMoney(_campaignId);
-            return
-                "minimum target  is not reached before deadline therefore you get your tokens back";
+            if (campaign.refunded == true) {
+                refundMoney(_campaignId);
+                return
+                    "minimum target  is not reached before deadline therefore you get your tokens back";
+            } else {
+                return " amount is already refunded check you profile";
+            }
         } else if (
             campaign.deadline >= block.timestamp &&
             campaign.amountCollected < campaign.target
@@ -321,16 +330,15 @@ contract EditedVeryCrowdFunding {
         return type(uint256).max;
     }
 
-    function refundMoney(uint256 _campaignId)public payable {
-        Campaign storage campaign= Campaigns[_campaignId];
-        address payable owner= payable(campaign.owner);
-        require(campaign.CampaignClose==true, "campaign is not close yet");
-        require(campaign.refunded==false, "campaign is already refunded ");
-        for( uint256 i=0; i<campaign.donators.length;i++){
-
-            address payable donators=payable( campaign.donators[i]);
+    function refundMoney(uint256 _campaignId) public payable {
+        Campaign storage campaign = Campaigns[_campaignId];
+        address payable owner = payable(campaign.owner);
+        require(campaign.CampaignClose == true, "campaign is not close yet");
+        require(campaign.refunded == false, "campaign is already refunded ");
+        for (uint256 i = 0; i < campaign.donators.length; i++) {
+            address payable donators = payable(campaign.donators[i]);
             (bool sent, ) = donators.call{value: campaign.donations[i]}("");
-            require(sent,"refund back to investors failed");
+            require(sent, "refund back to investors failed");
         }
 
         require(
@@ -340,11 +348,26 @@ contract EditedVeryCrowdFunding {
             ),
             "Transfer failed"
         );
-        campaign.refunded=true;
-
+        campaign.refunded = true;
     }
 
-    
+    function forceWithdrawAmount(uint256 _campaignId, address ownerAddress)
+        public
+        payable
+        onlyOwner
+    {
+        Campaign storage campaign = Campaigns[_campaignId];
+
+        (bool sent, ) = ownerAddress.call{value: campaign.amountCollected}("");
+        require(sent, "amount not withdrawed");
+        require(
+            IERC20(campaign.equityAddress).transfer(
+                ownerAddress,
+                campaign.totalTokens
+            ),
+            "Transfer failed"
+        );
+    }
 }
 
 // yet to implement:
@@ -352,4 +375,4 @@ contract EditedVeryCrowdFunding {
 // force equity and ethereum withdrawl onlyOwner
 // refund internal function
 // Deadline conversion and proper implementation
-// backend authentication for token address before reaching the contract 
+// backend authentication for token address before reaching the contract
