@@ -99,7 +99,7 @@ contract EditedVeryCrowdFunding is Ownable(msg.sender) {
         payable
         returns (bool)
     {
-        if (msg.value == 0) {
+        if (_equityTokens == 0) {
             return false;
         }
         // check the tokens address and the address of the stored address inside the database
