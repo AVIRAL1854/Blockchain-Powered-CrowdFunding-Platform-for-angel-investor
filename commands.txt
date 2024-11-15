@@ -7,3 +7,38 @@ note: 1)the token address is just same as  the address of the smart contract
       2)every company has to make their own token , therefore they have to deploy that smartcontract      on their own using our create token interface
 
 ### the decimal point should always be 18 , otherwise it cant be seen in metamask wallet
+
+
+NOTE: first we have to allow our smart contract to spend certain tokens
+      then we have to transfer spending account the tokens , from the makers account
+
+
+---------------------------------------------------------------------------------------------------------------
+
+      In an ERC20 token contract, **allowance** and **transfer** are distinct functionalities used to manage token transfers between accounts, especially when involving a third-party spender.
+
+### 1. **Allowance (approve and transferFrom):**
+   - The **allowance** mechanism allows one account (owner) to authorize another account (spender) to spend a specific amount of tokens on their behalf.
+   - This is done using two primary functions:
+     - `approve`: The owner calls this function to grant permission to a spender to transfer up to a specified number of tokens from their account.
+     - `transferFrom`: Once approval is granted, the spender can call `transferFrom` to move tokens from the owner’s account to another account. This is often used for scenarios like marketplaces or decentralized exchanges.
+
+   - Example use case: If Alice wants Bob to be able to spend 50 tokens on her behalf, Alice would call `approve(Bob, 50)`. Bob can then call `transferFrom(Alice, Recipient, amount)` up to 50 tokens.
+
+### 2. **Transfer:**
+   - The `transfer` function directly transfers tokens from the caller’s address to a specified recipient’s address. The caller must have a sufficient token balance, and no prior approval is needed because the transaction is initiated and signed by the token owner.
+
+   - Example use case: If Alice wants to send 50 tokens directly to Bob, she would call `transfer(Bob, 50)`. This transaction is immediate and does not involve a third-party spender.
+
+### Summary
+
+| Function | Purpose | Who Initiates | Use Case |
+| -------- | ------- | ------------- | -------- |
+| `approve` & `transferFrom` | Allow a third party to spend tokens on behalf of the owner | The owner (`approve`), the spender (`transferFrom`) | For contracts, DEXs, or delegated token spending |
+| `transfer` | Directly transfer tokens to another account | The token holder | For simple, direct transfers between accounts |
+
+### Key Differences
+- **Allowance** uses the `approve` and `transferFrom` methods for third-party spending, enabling greater flexibility and automation in decentralized applications.
+- **Transfer** is a straightforward one-step transfer initiated and completed by the token holder without involving a third-party spender. 
+
+Let me know if you'd like more details on either function!
