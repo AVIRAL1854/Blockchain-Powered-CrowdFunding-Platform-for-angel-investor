@@ -11,6 +11,23 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   let ans;
 
+  // Function to convert BigInt values to strings
+  const convertBigIntToString = (data) => {
+    if (typeof data === "bigint") {
+      return data.toString(); // Convert BigInt to string
+    } else if (Array.isArray(data)) {
+      return data.map(convertBigIntToString); // Recursively process arrays
+    } else if (typeof data === "object" && data !== null) {
+      return Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [
+          key,
+          convertBigIntToString(value),
+        ])
+      ); // Recursively process objects
+    }
+    return data; // Return other types as-is
+  };
+
   const donateCampaign = async (id) => {
     try {
       const ResponseDonateCampaign = await myContract.methods
@@ -21,29 +38,20 @@ export async function POST(req: NextRequest) {
           value: body.data.value,
         });
 
-      console.log("this is the responseData : " + ResponseDonateCampaign);
+      console.log("this is the responseData: ", ResponseDonateCampaign);
 
-      // Convert BigInt values to strings
-      const serializeCampaigns = (ResponseDonateCampaign) => {
-        return ResponseDonateCampaign.map((ResponseDonateCampaign) => {
-          return Object.fromEntries(
-            Object.entries(ResponseDonateCampaign).map(([key, value]) => [
-              key,
-              typeof value === "bigint" ? value.toString() : value,
-            ])
-          );
-        });
-      };
-      ans = serializeCampaigns;
+      // Apply serialization to handle BigInt values
+      ans = convertBigIntToString(ResponseDonateCampaign);
     } catch (error) {
-      console.log("this is the custom error:" + error.message);
+      console.log("this is the custom error:", error.message);
+      ans = error.message; // Return error message in case of failure
     }
   };
 
   await donateCampaign(body.data.id);
 
   return NextResponse.json({
-    message: "this was successfull and done",
+    message: "this was successful and done",
     response: ans,
   });
 }

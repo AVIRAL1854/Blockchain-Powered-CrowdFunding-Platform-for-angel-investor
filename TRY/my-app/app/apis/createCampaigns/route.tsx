@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { NextResponse,NextRequest } from "next/server";
-import {abi } from "@/Components/abi"
+import {abi } from "@/Components/abi";
+import EpochConverter from "@/Components/unix_calculator";
 // abi
 const infuraUrl = "http://127.0.0.1:8545/";
 const contractAddress=process.env.fake_contract_address;    
@@ -12,17 +13,20 @@ export async function POST(req:NextRequest){
     const myContract= new web3.eth.Contract(abi,contractAddress); 
     
     const body= await req.json();
-
+    const deadline = EpochConverter.toTimestamp(body.data.year, body.data.month, body.data.date, 0, 0, 0);
+    console.log("this is the deadline :"+ deadline);
     const campaignData={
 
         owner:body.data.owner,
         title:body.data.title,
         description:body.data.description,
         target:body.data.target,
-        deadline:body.data.deadline,
+        deadline:deadline,
         amountCollected:body.data.amountCollected,
         image:body.data.image,
-        accountAddress:body.data.accountAddress
+        accountAddress:body.data.accountAddress,
+        equityTokens:body.data.equityTokens,
+        equityTokenAddress:body.data.equityTokenAddress
 
     }
     let Hash;
@@ -36,16 +40,20 @@ export async function POST(req:NextRequest){
           deadline,
           amountCollected,
           image,
+          equityTokens,
+          equityTokenAddress,
         } = campaignData;
         try{
             const responseCreateCampaign = await myContract.methods
-              .createCampaigns(
-                owner,
+              .createCampaign(
+                // owner,
                 title,
                 description,
                 target,
                 deadline,
-                image
+                image,
+                equityTokens,
+                equityTokenAddress
               )
               .send({ from: body.data.accountAddress, gas: "3000000" });    
 
