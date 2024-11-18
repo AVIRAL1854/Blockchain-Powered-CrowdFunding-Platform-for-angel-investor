@@ -1,0 +1,83 @@
+POST - http://localhost:3000/apis/donateToCampaign - 
+
+{
+  "data": {
+    "value": 1010,
+    "id": 6,
+    "accountAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+  }
+}
+
+
+
+----------------------------------------------------->
+
+POST - http://localhost:3000/apis/createCampaigns
+
+{"data":{
+   "owner":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "title":"THIS IS THE TITLE of the test dsadsad",
+        "description":"THIS IS THE DESCRIPTION HERE test sada 4",
+        "target":1010,
+        "date":18,
+        "month":11,
+        "year":2024,
+        "deadline":1731930993,
+        "image":"THIS IS THE LINK TO THE IMAGES",
+        "accountAddress":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "equityTokens":"2110",
+        "equityTokenAddress":"0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  
+  
+}}
+
+
+------------------------------------------------------->
+
+
+GET - http://localhost:3000/apis/getCampaigns
+
+
+
+
+
+-------------------------------------------------------->
+
+POST - http://localhost:3000/apis/claimEquityTokens
+
+{
+  "data":{
+    "id":6,
+    "accountAddress":"0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+  }
+}
+
+
+---------------------------------------------------------->
+
+POST - http://localhost:3000/apis/makeEquityTokens
+
+
+{
+  "data": {
+    "deployerAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "constructorArgs": [VALUe, "Name", "Symbol", 18, 12]
+  }
+}
+
+
+--------------------------------------------------------------->
+
+POST - http://localhost:3000/apis/approveSuperToken
+
+{
+  "data": {
+    "contractAddress":"0x8464135c8F25Da09e49BC8782676a84730C318bC",
+    "toApproveAddress":"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "tokenValue":210,
+    "ownerAddress":"0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+    
+  }
+}
+
+
