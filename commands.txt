@@ -2,6 +2,18 @@ to run node --> npm hardhat node
 to compile --> npx hardhat compile
 to deploy --> npx hardhat ignition deploy ./ignition/modules/Lock.ts --network localhost
 
+fake_contract_address
+
+docker container for image of the database startup:- >docker run --name my-postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydb -p 5432:5432 -v my-postgres-data:/var/lib/postgresql/data -d postgres
+
+
+postgresql://myuser:mypassword@localhost:5432/mydb
+
+
+data base url will be :- postgresql://myuser:mypassword@localhost:5432/mydb?schema=public
+            
+
+
 
 note: 1)the token address is just same as  the address of the smart contract
       2)every company has to make their own token , therefore they have to deploy that smartcontract      on their own using our create token interface

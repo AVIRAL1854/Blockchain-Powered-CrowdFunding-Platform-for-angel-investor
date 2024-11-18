@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import { NextResponse, NextRequest } from "next/server";
 import { abi } from "@/Components/abi";
+import prisma from "@/db";
 
 const infuraUrl = "http://127.0.0.1:8545/";
 const contractAddress = process.env.fake_contract_address;
@@ -40,6 +41,17 @@ export async function POST(req: NextRequest) {
 
       console.log("this is the responseData: ", ResponseDonateCampaign);
 
+      const donatingResponseStore = await prisma.DonateToCampaign.create({
+        data:{
+          campaignId:id,
+          donation:body.data.value
+        }
+      });
+
+      console.log(
+        "this is database call for storing donating database:" +
+          JSON.stringify(donatingResponseStore)
+      );
       // Apply serialization to handle BigInt values
       ans = convertBigIntToString(ResponseDonateCampaign);
     } catch (error) {
