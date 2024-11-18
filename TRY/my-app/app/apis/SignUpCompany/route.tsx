@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/db";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -7,7 +8,7 @@ export async function POST(req: NextRequest) {
   const password = body.data.password;
 //   const Equity = body.data.equity;
   const VedioLink = body.data.link;
-  const companyRegistrationNumber = body.data.registrationNumber;
+  const registrationNumber = body.data.registrationNumber;
   const concent = body.data.concent;
 
   let ans;
@@ -20,14 +21,28 @@ export async function POST(req: NextRequest) {
         "\nVedioLink" +
         VedioLink +
         "\nCompany Resgistration Number:" +
-        companyRegistrationNumber
+        registrationNumber
     );
+
+     const newCompany = await prisma.Company.create({
+       data: {
+         registrationNumber,
+         password,
+         walletAddress,
+       },
+     });
+
+     console.log(
+       "this is the response from the database :" + JSON.stringify(newCompany)
+     );
+     ans = newCompany;
 
     // check whether already present or not
 
     // if not then create a new entry in database
   } catch (error) {
     console.log("this is the custom error :" + error.message);
+    ans=error.message
   }
 
   return NextResponse.json({

@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+  url = "postgresql://myuser:mypassword@localhost:5432/mydb" // Use environment variable for connection URL
+}
+
+model Investor {
+  id            Int      @id @default(autoincrement())  // PostgreSQL uses auto-incrementing integers
+  email         String   @unique
+  password      String
+  createdAt     DateTime @default(now())
+  walletAddress String
+}
+
+model Company {
+  id                Int      @id @default(autoincrement())  // Auto-increment integer
+  registrationNumber String   @unique
+  password          String
+  walletAddress     String
+}
+
+model CompanyTokens {
+  id                Int      @id @default(autoincrement())  // Auto-increment integer
+  registrationNumber String
+  tokenQuantity     Int
+  equity            Float
+  walletAddress     String
+  tokenName         String
+  tokenSymbol       String
+}
+
+model UserToken {
+  id                Int      @id @default(autoincrement())  // Auto-increment integer
+  tokenQuantity     Int
+  equity            Float
+  tokenName         String
+  tokenSymbol       String
+  tokenAddress      String
+}
+
+model DonateToCampaign {
+  id          Int      @id @default(autoincrement())  // Auto-increment integer
+  campaignId  Int
+  donation    Int
+  createdAt   DateTime @default(now())
+}

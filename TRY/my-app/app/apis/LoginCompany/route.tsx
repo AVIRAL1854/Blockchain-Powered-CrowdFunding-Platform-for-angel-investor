@@ -1,41 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+const JWT_SECRET = "your-secret-key"; // Use a secure secret key (store it in environment variables)
 
 export async function POST(req: NextRequest) {
- 
-
-    const body= await req.json();
-  const walletAddress = body.data.walletAddress;
-//   const email = body.data.email;
+  const body = await req.json();
+  const registrationNumber = body.data.registrationNumber;
   const password = body.data.password;
-//   const Equity = body.data.equity;
-//   const VedioLink = body.data.link;
-  const companyRegistrationNumber = body.data.registrationNumber;
-//   const concent=body.data.concent;
 
   let ans;
   try {
-    console.log(
-      "this is the :" +
-        walletAddress +
-        "\nthis is the password" +
-        password +
-        "\nEquity" +
-        
-        "\nVedioLink" +
-        
-        "\nCompany Resgistration Number:" +
-        companyRegistrationNumber
+    // Check if the company exists and credentials are valid
+    const company = await prisma.Company.findUnique({
+      where: {
+        registrationNumber, // Use registrationNumber as the unique identifier for the company
+      },
+    });
+
+    if (!company || company.password !== password) {
+      return NextResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 }
+      );
+    }
+
+    // Generate JWT token for the company
+    const token = jwt.sign(
+      { id: company.id, registrationNumber: company.registrationNumber, role: "company" },
+      JWT_SECRET,
+      { expiresIn: "1h" } // Token expires in 1 hour
     );
 
-    // check whether already present or not
-
-    // if not then create a new entry in database
+    ans = {
+      message: "Company login successful",
+      token, // Return the token to the frontend
+    };
   } catch (error) {
-    console.log("this is the custom error :" + error.message);
+    console.log("Error:", error.message);
+    return NextResponse.json(
+      { message: "Error occurred", error: error.message },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({
-    message: "this is working fine",
+    message: "This is working fine",
     response: ans,
   });
 }

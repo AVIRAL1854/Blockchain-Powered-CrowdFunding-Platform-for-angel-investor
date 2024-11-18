@@ -1,4 +1,6 @@
 import { NextRequest,NextResponse } from "next/server";
+import prisma  from "@/db";
+
 
 export async function POST(req:NextRequest){
 
@@ -12,13 +14,24 @@ let ans;
 try{
 
     console.log("this is the :"+walletAddress+"\nthis is email"+email+"\nthis is the password"+password);
+    const newInvestor= await prisma.Investor.create({
+        data:{
+            email,
+            password,
+            walletAddress
 
+        }
+    })
+
+    console.log("this is the response from the database :"+ JSON.stringify(newInvestor));
+    ans=newInvestor;
     // check whether already present or not 
 
     // if not then create a new entry in database
 
 }catch(error){
     console.log("this is the custom error :"+error.message);
+    ans=error.message
 }
 
 return NextResponse.json({

@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import Web3 from "web3";
 import { EquityABI } from "@/Components/EquityABI";
 import { ByteCode } from "@/Components/EquityByteCode";
+import prisma from "@/db";
 
 const bytecode = ByteCode;
 const infuraUrl = "http://127.0.0.1:8545/";
@@ -109,6 +110,34 @@ let receipt;
       gasUsed: receipt ? receipt.gasUsed : null,
       blockNumber: receipt ? receipt.blockNumber : null,
     };
+
+// const newCompany = await prisma.Company.create({
+//   data: {
+//     registrationNumber,
+//     password,
+//     walletAddress,
+//   },
+// });
+    const tokenGenerated = await prisma.CompanyTokens.create({
+      data: {
+        registrationNumber: body.data.registrationNumber,
+        tokenQuantity: formattedArgs[0],
+        equity: formattedArgs[4],
+        walletAddress: deploymentResult.contractAddress,
+        tokenName: formattedArgs[1],
+        tokenSymbol: formattedArgs[2],
+      },
+    });
+
+    console.log("this is working fine database :" + JSON.stringify(tokenGenerated));
+
+    //   const formattedArgs = [
+    //   constructorArgs[0], // initialSupply (uint256)
+    //   constructorArgs[1], // name (string)
+    //   constructorArgs[2], // symbol (string)
+    //   constructorArgs[3], // decimals (uint8)
+    //   constructorArgs[4], // equityAmount (uint256)
+    // ];
 
     console.log("Contract deployed successfully:", deploymentResult);
 
