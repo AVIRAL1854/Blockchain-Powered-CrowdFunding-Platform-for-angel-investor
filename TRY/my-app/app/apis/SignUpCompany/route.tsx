@@ -4,9 +4,7 @@ import prisma from "@/db";
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const walletAddress = body.data.walletAddress;
-//   const email = body.data.email;
   const password = body.data.password;
-//   const Equity = body.data.equity;
   const VedioLink = body.data.link;
   const registrationNumber = body.data.registrationNumber;
   const concent = body.data.concent;
@@ -24,29 +22,40 @@ export async function POST(req: NextRequest) {
         registrationNumber
     );
 
-     const newCompany = await prisma.Company.create({
-       data: {
-         registrationNumber,
-         password,
-         walletAddress,
-       },
-     });
+    const newCompany = await prisma.Company.create({
+      data: {
+        registrationNumber,
+        password,
+        walletAddress,
+      },
+    });
 
-     console.log(
-       "this is the response from the database :" + JSON.stringify(newCompany)
-     );
-     ans = newCompany;
-
-    // check whether already present or not
-
-    // if not then create a new entry in database
+    console.log(
+      "this is the response from the database :" + JSON.stringify(newCompany)
+    );
+    ans = newCompany;
   } catch (error) {
     console.log("this is the custom error :" + error.message);
-    ans=error.message
+    ans = error.message;
   }
 
-  return NextResponse.json({
+  // Set CORS headers
+  const response = NextResponse.json({
     message: "this is working fine",
     response: ans,
   });
+
+  response.headers.set("Access-Control-Allow-Origin", "http://localhost:5173");
+  response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+
+  return response;
+}
+
+export async function OPTIONS() {
+  const response = NextResponse.json({});
+  response.headers.set("Access-Control-Allow-Origin", "http://localhost:5173");
+  response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+  return response;
 }
