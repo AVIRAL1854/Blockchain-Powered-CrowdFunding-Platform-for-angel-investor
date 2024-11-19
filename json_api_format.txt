@@ -81,3 +81,55 @@ POST - http://localhost:3000/apis/approveSuperToken
 }
 
 
+------------------------------------------>
+POST - http://localhost:3000/apis/LoginUser
+
+{
+  "data": {
+    "email":"try@gmail.com",
+    "password":"this is the password"
+  }
+}
+
+------------------------------------------>
+
+POST - http://localhost:3000/apis/SignUpCompany
+
+{
+  "data": {
+    "email": "try@gmail.com",
+    "registrationNumber": "this is the company registration nufsdfmber",
+    "password": "this is the password",
+    "link": "this is the vedio link for proof",
+    "equity": 15,
+    "walletAddress": "this is the wallet address",
+    "concent": "true"
+  }
+}
+
+
+------------------------------------------------>
+
+POST - http://localhost:3000/apis/LoginCompany
+{
+  "data": {
+    "password": "this is the password",
+    "walletAddress": "this is the wallet address",
+    "registrationNumber": "this is the company registration number"
+  }
+}
+
+
+
+-------------------------------------------------------->
+
+POST -http://localhost:3000/apis/SignUpInvestor
+
+
+{
+  "data": {
+    "email":"trasdasy@gmail.com",
+    "password":"this is the password",
+    "walletAddress":"this is the wallet address"
+  }
+}
