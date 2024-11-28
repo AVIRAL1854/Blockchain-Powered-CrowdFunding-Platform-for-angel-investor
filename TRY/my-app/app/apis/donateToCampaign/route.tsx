@@ -2,48 +2,16 @@ import Web3 from "web3";
 import { NextResponse, NextRequest } from "next/server";
 import { abi } from "@/Components/abi";
 import prisma from "@/db";
-import { cors } from "@/lib/cors";
+import { corsMiddleware, setCorsHeaders } from "@/Components/CorsMiddleware";
 
 const infuraUrl = "http://127.0.0.1:8545/";
 const contractAddress = process.env.fake_contract_address;
 
-// Create a middleware to handle CORS
-async function corsMiddleware(request: NextRequest) {
-  // Check if it's a preflight request
-  if (request.method === "OPTIONS") {
-    return new NextResponse(null, {
-      status: 200,
-      headers: {
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        "Access-Control-Allow-Origin": "*", // For development. In production, specify your domain
-        "Access-Control-Max-Age": "86400", // 24 hours cache for preflight requests
-      },
-    });
-  }
-
-  // For actual requests, add CORS headers to the response
-  const response = new NextResponse();
-  response.headers.set("Access-Control-Allow-Origin", "*"); // For development
-  response.headers.set(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
-
-  return response;
-}
-
 export async function POST(req: NextRequest) {
   try {
-    // Handle CORS first
+    // Handle CORS
     const corsCheck = await corsMiddleware(req);
-    if (req.method === "OPTIONS") {
-      return corsCheck;
-    }
+    if (corsCheck) return corsCheck; // Return response for CORS preflight requests
 
     const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
     const myContract = new web3.eth.Contract(abi, contractAddress);
@@ -52,18 +20,15 @@ export async function POST(req: NextRequest) {
 
     // Function to convert BigInt values to strings
     const convertBigIntToString = (data) => {
-      if (typeof data === "bigint") {
-        return data.toString();
-      } else if (Array.isArray(data)) {
-        return data.map(convertBigIntToString);
-      } else if (typeof data === "object" && data !== null) {
+      if (typeof data === "bigint") return data.toString();
+      if (Array.isArray(data)) return data.map(convertBigIntToString);
+      if (typeof data === "object" && data !== null)
         return Object.fromEntries(
           Object.entries(data).map(([key, value]) => [
             key,
             convertBigIntToString(value),
           ])
         );
-      }
       return data;
     };
 
@@ -100,42 +65,32 @@ export async function POST(req: NextRequest) {
 
     await donateCampaign(body.data.id);
 
-    // Create response with CORS headers
-    return new NextResponse(
-      JSON.stringify({
+    const response = NextResponse.json(
+      {
         message: "this was successful and done",
         response: ans,
-      }),
+      },
       {
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*", // For development
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
       }
     );
+
+    return setCorsHeaders(response); // Add CORS headers to the response
   } catch (error) {
-    // Error response with CORS headers
-    return new NextResponse(
-      JSON.stringify({
+    const errorResponse = NextResponse.json(
+      {
         error: error.message || "An error occurred",
-      }),
+      },
       {
         status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*", // For development
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
       }
     );
+
+    return setCorsHeaders(errorResponse); // Add CORS headers to error response
   }
 }
 
-// Export config to enable CORS
+// Export config for API route
 export const config = {
   api: {
     bodyParser: true,
