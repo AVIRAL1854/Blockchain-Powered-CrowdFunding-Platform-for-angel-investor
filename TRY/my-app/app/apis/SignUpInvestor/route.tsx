@@ -1,8 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db";
 
+// CORS Middleware to handle preflight requests
+const corsMiddleware = (req) => {
+  if (req.method === "OPTIONS") {
+    return NextResponse.json(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:5173",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+  return null; // Proceed to the next middleware/handler
+};
+
+// Set CORS headers to response
+const setCorsHeaders = (response) => {
+  response.headers.set("Access-Control-Allow-Origin", "http://localhost:5173");
+  response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+  return response;
+};
+
 export async function POST(req) {
+  // Handle CORS preflight request
+  const corsCheck = corsMiddleware(req);
+  if (corsCheck) return corsCheck;
+
   try {
+    // Parse the request body
     const body = await req.json();
     const { walletAddress, email, password } = body.data;
 
@@ -10,6 +37,7 @@ export async function POST(req) {
       `Wallet: ${walletAddress}, Email: ${email}, Password: ${password}`
     );
 
+    // Create a new investor entry in the database
     const newInvestor = await prisma.Investor.create({
       data: {
         email,
@@ -20,83 +48,26 @@ export async function POST(req) {
 
     console.log(`Database response: ${JSON.stringify(newInvestor)}`);
 
-    return NextResponse.json(
-      {
-        message: "This is working fine",
-        response: newInvestor,
-      },
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:5173", // Allow your frontend
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }
-    );
+    // Return successful response with CORS headers
+    const response = NextResponse.json({
+      message: "This is working fine",
+      response: newInvestor,
+    });
+
+    return setCorsHeaders(response); // Set CORS headers before returning response
   } catch (error) {
+    // Handle errors and return them with CORS headers
     console.error(`Error: ${error.message}`);
-    return NextResponse.json(
-      {
-        message: "An error occurred",
-        response: error.message,
-      },
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:5173",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }
-    );
+    const errorResponse = NextResponse.json({
+      message: "An error occurred",
+      response: error.message,
+    });
+
+    return setCorsHeaders(errorResponse); // Set CORS headers on error response
   }
 }
 
-export async function OPTIONS() {
-  return NextResponse.json(null, {
-    headers: {
-      "Access-Control-Allow-Origin": "http://localhost:5173",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+export async function OPTIONS(req) {
+  // Return preflight response with CORS headers
+  return corsMiddleware(req);
 }
-
-// import { NextRequest,NextResponse } from "next/server";
-// import prisma  from "@/db";
-
-// export async function POST(req:NextRequest){
-
-// const body=await req.json();
-// const walletAddress=body.data.walletAddress;
-// const email=body.data.email;
-// const password=body.data.password;
-
-// let ans;
-// try{
-
-//     console.log("this is the :"+walletAddress+"\nthis is email"+email+"\nthis is the password"+password);
-//     const newInvestor= await prisma.Investor.create({
-//         data:{
-//             email,
-//             password,
-//             walletAddress
-
-//         }
-//     })
-
-//     console.log("this is the response from the database :"+ JSON.stringify(newInvestor));
-//     ans=newInvestor;
-//     // check whether already present or not
-
-//     // if not then create a new entry in database
-
-// }catch(error){
-//     console.log("this is the custom error :"+error.message);
-//     ans=error.message
-// }
-
-// return NextResponse.json({
-//     "message":"this is working fine",
-//     "response":ans
-// })
-// }

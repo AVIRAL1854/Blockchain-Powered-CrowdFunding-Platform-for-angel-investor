@@ -3,6 +3,7 @@ import Web3 from "web3";
 import { EquityABI } from "@/Components/EquityABI";
 import { ByteCode } from "@/Components/EquityByteCode";
 import prisma from "@/db";
+import { corsMiddleware, setCorsHeaders } from "@/Components/CorsMiddleware";
 
 const bytecode = ByteCode;
 const infuraUrl = "http://127.0.0.1:8545/";
@@ -25,6 +26,10 @@ const convertBigIntToString = (data: any): any => {
 
 export async function POST(req: NextRequest) {
   try {
+    // Handle CORS
+    const corsCheck = await corsMiddleware(req);
+    if (corsCheck) return corsCheck; // Return CORS response for preflight requests
+
     const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
     const body = await req.json();
 
@@ -83,11 +88,9 @@ export async function POST(req: NextRequest) {
       gas: gasLimit,
     });
 
-    console.log("BEFORE RECEIPT");
-    // const receipt = await web3.eth.getTransactionReceipt(
-    //   deployedContract.transactionHash
-    // );
-let receipt;
+    let receipt;
+
+    // Handle the deployment transaction events
     deploy
       .send({ from: deployerAddress, gas: gasLimit })
       .on("transactionHash", (hash) => {
@@ -100,9 +103,7 @@ let receipt;
         console.error("Deployment failed:", error);
       });
 
-    
     console.log("after RECEIPT");
-
 
     const deploymentResult = {
       contractAddress: deployedContract.options.address,
@@ -111,13 +112,6 @@ let receipt;
       blockNumber: receipt ? receipt.blockNumber : null,
     };
 
-// const newCompany = await prisma.Company.create({
-//   data: {
-//     registrationNumber,
-//     password,
-//     walletAddress,
-//   },
-// });
     const tokenGenerated = await prisma.CompanyTokens.create({
       data: {
         registrationNumber: body.data.registrationNumber,
@@ -129,24 +123,18 @@ let receipt;
       },
     });
 
-    console.log("this is working fine database :" + JSON.stringify(tokenGenerated));
-
-    //   const formattedArgs = [
-    //   constructorArgs[0], // initialSupply (uint256)
-    //   constructorArgs[1], // name (string)
-    //   constructorArgs[2], // symbol (string)
-    //   constructorArgs[3], // decimals (uint8)
-    //   constructorArgs[4], // equityAmount (uint256)
-    // ];
+    console.log("Database entry successful:", JSON.stringify(tokenGenerated));
 
     console.log("Contract deployed successfully:", deploymentResult);
 
-    return NextResponse.json({
+    const successResponse = NextResponse.json({
       message: "Contract deployed successfully",
       data: convertBigIntToString(deploymentResult),
     });
+
+    return setCorsHeaders(successResponse); // Add CORS headers to the success response
   } catch (error) {
-    console.error("Contract deployment failed:",error);
+    console.error("Contract deployment failed:", error);
 
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error occurred";
@@ -154,12 +142,14 @@ let receipt;
     // Log the full error for debugging
     console.log("Full error object:", error);
 
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       {
         error: errorMessage,
         details: error,
       },
       { status: 500 }
     );
+
+    return setCorsHeaders(errorResponse); // Add CORS headers to the error response
   }
 }
