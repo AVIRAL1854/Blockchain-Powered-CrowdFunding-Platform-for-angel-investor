@@ -47,11 +47,11 @@ export async function POST(req: NextRequest) {
 
     // Format constructor arguments - using the numbers directly without Wei conversion
     const formattedArgs = [
-      constructorArgs[0], // initialSupply (uint256)
+      Number(constructorArgs[0]), // initialSupply (uint256)
       constructorArgs[1], // name (string)
       constructorArgs[2], // symbol (string)
       constructorArgs[3], // decimals (uint8)
-      constructorArgs[4], // equityAmount (uint256)
+      Number(constructorArgs[4]), // equityAmount (uint256)
     ];
 
     console.log("Formatted Constructor Args:", formattedArgs);

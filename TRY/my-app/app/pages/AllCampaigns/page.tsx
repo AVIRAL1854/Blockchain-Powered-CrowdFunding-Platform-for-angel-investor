@@ -116,7 +116,7 @@ export default function AllCampaigns() {
              description={campaign.description}
              target={campaign.target}
              deadline={campaign.deadline}
-             image={campaign.image}
+             image={ campaignimage}
              amountCollected={campaign.amountCollected}
            />
          ))}

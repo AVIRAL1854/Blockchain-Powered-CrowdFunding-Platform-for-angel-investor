@@ -63,7 +63,10 @@ const handleCardClick = () => {
       {/* Campaign Image */}
       <img
         className="rounded-lg object-cover h-40 w-full"
-        src={campaignimage}
+        src={
+          image
+        }
+        // src={campaignimage}
         alt="campaign image"
       />
 

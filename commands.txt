@@ -4,7 +4,11 @@ to deploy --> npx hardhat ignition deploy ./ignition/modules/Lock.ts --network l
 
 fake_contract_address
 
+
 docker container for image of the database startup:- >docker run --name my-postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydb -p 5432:5432 -v my-postgres-data:/var/lib/postgresql/data -d postgres
+
+if already running problem then : docker stop /my-postgres
+                                  docker rm /my-postgres
 
 
 postgresql://myuser:mypassword@localhost:5432/mydb

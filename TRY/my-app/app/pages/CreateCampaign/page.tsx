@@ -9,6 +9,13 @@ import SubmitButton from "@/Components/SubmitButton";
 import { useRouter } from "next/navigation";
 
 function CreateCampaign() {
+
+  const imageArray = [
+    "https://images.pexels.com/photos/29510136/pexels-photo-29510136/free-photo-of-stunning-snowy-matterhorn-mountain-peak-in-switzerland.jpeg",
+    "https://images.pexels.com/photos/5859768/pexels-photo-5859768.jpeg",
+    "https://images.pexels.com/photos/29575236/pexels-photo-29575236/free-photo-of-charming-porticoed-street-in-bologna-italy.jpeg",
+    "https://images.pexels.com/photos/11513527/pexels-photo-11513527.jpeg",
+  ];
   const [walletAddr, setWalletAddr] = useState<string>("");
   const [campaignName, setCampaignName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -52,6 +59,10 @@ function CreateCampaign() {
           `\nday:${day}\nmonth:${month}\nyear:${year}`
       );
     
+    const randomImagePicker=()=>{
+      const randomIndex=Math.random()*(imageArray.length-0)+0;
+      return imageArray[randomIndex];
+    }
     const payload = {
       data: {
         owner: walletAddr,
@@ -61,7 +72,7 @@ function CreateCampaign() {
         date: day,
         month: month,
         year: year,
-        image: "THIS IS THE LINK TO THE IMAGES",
+        image: randomImagePicker(),
         accountAddress: walletAddr,
         equityTokens: tokenAmount,
         equityTokenAddress: tokenAddress,
