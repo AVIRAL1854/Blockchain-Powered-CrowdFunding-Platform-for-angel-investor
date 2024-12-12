@@ -20,7 +20,12 @@ export default function Home() {
         console.log("this is the contractAddress:"+contractAddress);
         console.log("this is the abi :"+ abi)
     },[])
- return (<div>
-  <ConnectWallet  setAccount={setAccount}/>
- </div>);
+ return (
+   <div>
+     <ConnectWallet setAccount={setAccount} />
+     <div>
+       <a href="/pages/AllCampaigns" className="text-blue-600 underline text-3xl">click here for the campaigns dashboard</a>
+     </div>
+   </div>
+ );
 }

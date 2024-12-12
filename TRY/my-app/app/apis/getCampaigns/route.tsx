@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
         const result = await myContract.methods.getAllCampaigns().call({
           gas: "3000000",
         });
-        console.log("Fetched campaigns:", result);
+        // console.log("Fetched campaigns:", result);
         return result;
       } catch (error) {
         console.error("Error fetching campaigns from contract:", error.message);
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
     const serializedCampaigns = convertBigIntToString(campaigns);
 
     // Debug log to verify serialization
-    console.log("Serialized campaigns:", serializedCampaigns);
+    // console.log("Serialized campaigns:", serializedCampaigns);
 
     const response = NextResponse.json(
       {

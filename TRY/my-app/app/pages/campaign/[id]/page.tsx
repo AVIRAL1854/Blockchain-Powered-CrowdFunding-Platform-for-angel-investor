@@ -85,7 +85,7 @@ function Campaign() {
       if (donationAmount != null && accountAddress != null) {
         const body = {
           data: {
-            value: donationAmount,
+            value: Number(donationAmount),
             id: id,
             accountAddress: accountAddress,
           },

@@ -2,12 +2,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import campaignimage from "@/app/assets/campaign.avif";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import CampaignCard from "@/Components/CampaignCard";
 
 export default function AllCampaigns() {
+  
   const [campaigns, setCampaigns] = useState([]);
-
    const Campaigns = [
      {
        id: 1,
@@ -57,6 +57,7 @@ export default function AllCampaigns() {
        amountCollected: 3000,
      },
    ];
+   const router = useRouter();
   useEffect(() => {
     const fetchdata = async () => {
       try{
@@ -64,7 +65,7 @@ export default function AllCampaigns() {
         const response = await axios.get(
           "http://localhost:3000/apis/getCampaigns"
         );
-        console.log("this is the all data" + JSON.stringify(response));
+        // console.log("this is the all data" + JSON.stringify(response));
 
         const data=response.data.campaigns;
          const transformedCampaigns= data.titles.map(
@@ -97,7 +98,10 @@ export default function AllCampaigns() {
          <div>
            <button
              className="px-6 font-medium py-2 rounded-3xl bg-green-500 shadow-lg shadow-green-500"
-             onClick={() => redirect("/campaign/add")}
+             onClick={() => {
+              
+              console.log("this is clicked")
+              router.push("/pages/CreateCampaign")}}
            >
              Add
            </button>
