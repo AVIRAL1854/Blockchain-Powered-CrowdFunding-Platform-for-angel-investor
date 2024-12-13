@@ -97,12 +97,19 @@ function Campaign() {
 
         console.log(
           "this is the response of the donation :" + JSON.stringify(response)
+          
         );
+
+        alert(" successFully donated");
       } else {
+        alert("account address or donation amount is not set ");
+
         throw new Error("account address or donation amount is not set ");
+        
       }
     } catch (e) {
       console.log("this is the error :" + JSON.stringify(e.message));
+      alert(" Failed donation :"+ JSON.stringify(e.message));
     }
   };
 

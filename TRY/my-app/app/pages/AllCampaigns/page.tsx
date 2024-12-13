@@ -7,6 +7,20 @@ import CampaignCard from "@/Components/CampaignCard";
 
 export default function AllCampaigns() {
   
+
+  const RandomImagePicker=()=>{
+    const imageArray = [
+      "https://images.pexels.com/photos/13119652/pexels-photo-13119652.jpeg",
+      "https://images.pexels.com/photos/27303505/pexels-photo-27303505/free-photo-of-a-dog-is-standing-on-a-mountain-with-a-mountain-in-the-background.jpeg",
+      "https://images.pexels.com/photos/20605716/pexels-photo-20605716/free-photo-of-people-on-one-horse-shay.jpeg",
+      "https://images.pexels.com/photos/29575236/pexels-photo-29575236/free-photo-of-charming-porticoed-street-in-bologna-italy.jpeg",
+      "https://images.pexels.com/photos/29452562/pexels-photo-29452562/free-photo-of-vibrant-red-outdoor-bench-and-table-in-rain.jpeg",
+      "https://images.pexels.com/photos/27559206/pexels-photo-27559206/free-photo-of-a-group-of-people-standing-on-the-beach.jpeg"
+
+    ];
+
+    return imageArray[Math.floor(Math.random()*(5-0+1))];
+  }
   const [campaigns, setCampaigns] = useState([]);
    const Campaigns = [
      {
@@ -97,13 +111,25 @@ export default function AllCampaigns() {
          <h1 className="text-4xl font-bold">Campaigns</h1>
          <div>
            <button
-             className="px-6 font-medium py-2 rounded-3xl bg-green-500 shadow-lg shadow-green-500"
+             className="px-6 font-medium py-2 rounded-3xl bg-green-500 shadow-lg shadow-green-500 
+             transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 hover:shadow-indigo-500 duration-300 mt-4"
              onClick={() => {
-              
-              console.log("this is clicked")
-              router.push("/pages/CreateCampaign")}}
+               console.log("this is clicked");
+               router.push("/pages/CreateCampaign");
+             }}
            >
-             Add
+             Add Campaigns
+           </button>
+
+           <button
+             className="px-6 font-medium py-2 rounded-3xl bg-green-500 shadow-lg shadow-green-500 
+             transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 hover:shadow-indigo-500 duration-300 ml-4 mt-4"
+             onClick={() => {
+               console.log("this is clicked");
+               router.push("/pages/myTokens");
+             }}
+           >
+             My Company Tokens
            </button>
          </div>
        </div>
@@ -116,7 +142,7 @@ export default function AllCampaigns() {
              description={campaign.description}
              target={campaign.target}
              deadline={campaign.deadline}
-             image={ campaignimage}
+             image={RandomImagePicker()}
              amountCollected={campaign.amountCollected}
            />
          ))}
