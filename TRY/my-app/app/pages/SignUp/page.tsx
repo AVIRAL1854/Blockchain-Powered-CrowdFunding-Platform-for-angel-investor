@@ -8,39 +8,39 @@ import RocketMan from "@/app/assets/RocketMan";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-function SigninForm() {
+function SignupForm() {
+//   const navigate = useNavigate();
+const router=useRouter();
+
   async function handleClickInvestor() {
     try {
       const body = {
         data: {
           email: email,
           password: password,
+          walletAddress: walletAddress,
         },
       };
-
-      console.log(body);
-
       const response = await axios.post(
-        "http://localhost:3000/apis/LoginUser",
+        "http://localhost:3000/apis/SignUpInvestor",
         body
       );
-
       if (response.status === 200) {
         console.log("Login successful:", response.data);
-        // alert("login Successfull");
-        alert("Login Successfully");
-        router.push("/pages/AllCampaigns");
+        alert("Registration Successfully");
       } else {
         console.error("Unexpected response:", response);
-        alert("Login Failed");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
+        alert("Registration Failed")
+    }
+} catch (error) {
+    if (axios.isAxiosError(error)) {
+        // Axios-specific error
         console.error("Axios error response:", error.response?.data);
-        alert("Login Failed");
-      } else {
+        alert("Registration Failed")
+    } else {
+        // Generic error handling
         console.error("Unexpected error:", error);
-        alert("Login Failed");
+        alert("Registration Failed")
       }
     }
   }
@@ -48,33 +48,32 @@ function SigninForm() {
   async function handleClickCompany() {
     try {
       const body = {
-        data: { registrationNumber: rNo, password: password },
+        data: {
+          registrationNumber: rNo,
+          password: password,
+          walletAddress: walletAddress,
+        },
       };
-
-      console.log(body);
+      console.log("body" + body);
 
       const response = await axios.post(
-        "http://localhost:3000/apis/LoginCompany",
+        "http://localhost:3000/apis/SignUpCompany",
         body
       );
-
       if (response.status === 200) {
         console.log("Login successful:", response.data);
-        alert("Login SuccessFull");
-        router.push("/pages/AllCampaigns");
+        alert("You have been registered");
+        router.push("/SignIn");
       } else {
         console.error("Unexpected response:", response);
-        alert("Login Failed");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Axios-specific error
-        alert("Login Failed");
         console.error("Axios error response:", error.response?.data);
       } else {
         // Generic error handling
         console.error("Unexpected error:", error);
-        alert("Login Failed");
       }
     }
   }
@@ -83,10 +82,8 @@ function SigninForm() {
 
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [walletAddress, setWalletAddress] = useState<string>();
   const [rNo, setRNo] = useState<string>();
-
-  //   const navigate = useNavigate();
-  const router = useRouter();
 
   return (
     <div className="w-full px-6">
@@ -98,10 +95,11 @@ function SigninForm() {
           <div className="flex flex-col justify-between">
             <div>
               <h1 className="text-6xl font-extrabold text-red-600 max-w-lg tracking-wider">
-                Welcome Back! 🚀
+                Welcome to our community
               </h1>
               <div className="text-sm mt-2 p-1 max-w-xs font-semibold">
-                Sign in to fund ideas, track your impact, and shape the future."
+                Invest in tomorrow’s game-changers today. Join us and fuel the
+                next wave of innovation.
               </div>
             </div>
             <button
@@ -123,7 +121,11 @@ function SigninForm() {
                   className={`text-sm w-full rounded py-3 grid place-content-center text-black font-bold cursor-pointer transition-all duration-300 ${
                     !isInvestor ? "bg-red-500" : "bg-red-100"
                   }`}
-                  onClick={() => setIsInvestor(false)}
+                  onClick={() => {
+                    setIsInvestor(false);
+                    setEmail("");
+                    setWalletAddress("");
+                  }}
                 >
                   Company
                 </div>
@@ -131,7 +133,11 @@ function SigninForm() {
                   className={`text-sm w-full rounded py-2 grid place-content-center text-black font-bold cursor-pointer transition-all duration-300 ${
                     isInvestor ? "bg-red-500" : "bg-red-100"
                   }`}
-                  onClick={() => setIsInvestor(true)}
+                  onClick={() => {
+                    setIsInvestor(true);
+                    setEmail("");
+                    setWalletAddress("");
+                  }}
                 >
                   Investor
                 </div>
@@ -148,14 +154,19 @@ function SigninForm() {
                     type="password"
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <SignupFormInput
+                    placeholder="Enter your wallet address"
+                    type="text"
+                    onChange={(e) => setWalletAddress(e.target.value)}
+                  />
                   <RegisterButton
-                    buttonText="Sign in"
+                    buttonText="Register"
                     onClick={handleClickInvestor}
                   />
                   <div className="text-sm mt-2 p-1 max-w-xs font-semibold">
-                    Dont have an Account ?{" "}
-                    <a href="/pages/SignUp" className="underline">
-                      SignUp
+                    Already have an Account ?{" "}
+                    <a href="/pages/SignIn" className="underline">
+                      Signin
                     </a>
                   </div>
                 </>
@@ -171,14 +182,19 @@ function SigninForm() {
                     type="password"
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <SignupFormInput
+                    placeholder="Enter your wallet address"
+                    type="text"
+                    onChange={(e) => setWalletAddress(e.target.value)}
+                  />
                   <RegisterButton
-                    buttonText="Sign in"
+                    buttonText="Register"
                     onClick={handleClickCompany}
                   />
                   <div className="text-sm mt-2 p-1 max-w-xs font-semibold">
-                    Dont have an Account ?{" "}
-                    <a href="/pages/SignUp" className="underline">
-                      SignUp
+                    Already have an Account ?{" "}
+                    <a href="/pages/SignIn" className="underline">
+                      Signin
                     </a>
                   </div>
                 </>
@@ -191,4 +207,4 @@ function SigninForm() {
   );
 }
 
-export default SigninForm;
+export default SignupForm;

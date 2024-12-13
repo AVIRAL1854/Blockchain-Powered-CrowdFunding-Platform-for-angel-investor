@@ -24,6 +24,7 @@ model Company {
   registrationNumber String   @unique
   password          String
   walletAddress     String
+  createdAt   DateTime @default(now())
 }
 
 model CompanyTokens {
@@ -31,9 +32,10 @@ model CompanyTokens {
   registrationNumber String
   tokenQuantity     Int
   equity            Float
-  walletAddress     String
+  tokenAddress     String
   tokenName         String
   tokenSymbol       String
+  createdAt   DateTime @default(now())
 }
 
 model UserToken {
@@ -43,6 +45,7 @@ model UserToken {
   tokenName         String
   tokenSymbol       String
   tokenAddress      String
+  createdAt   DateTime @default(now())
 }
 
 model DonateToCampaign {

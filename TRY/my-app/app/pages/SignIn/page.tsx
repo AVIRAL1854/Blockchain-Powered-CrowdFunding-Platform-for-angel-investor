@@ -21,24 +21,23 @@ function SigninForm() {
       console.log(body);
 
       const response = await axios.post(
-        "http://localhost:3000/apis/LoginUser",
-        body
+        "http://localhost:3000/apis/LoginUser",body
       );
 
       if (response.status === 200) {
         console.log("Login successful:", response.data);
         // alert("login Successfull");
         alert("Login Successfully");
-        router.push("/pages/AllCampaigns");
-      } else {
+        router.push("/pages/AllCampaigns")
+    } else {
         console.error("Unexpected response:", response);
         alert("Login Failed");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
+    }
+} catch (error) {
+    if (axios.isAxiosError(error)) {
         console.error("Axios error response:", error.response?.data);
         alert("Login Failed");
-      } else {
+    } else {
         console.error("Unexpected error:", error);
         alert("Login Failed");
       }
@@ -48,7 +47,7 @@ function SigninForm() {
   async function handleClickCompany() {
     try {
       const body = {
-        data: { registrationNumber: rNo, password: password },
+        data: { registrationNumber: rNo, password: password }
       };
 
       console.log(body);
@@ -61,17 +60,17 @@ function SigninForm() {
       if (response.status === 200) {
         console.log("Login successful:", response.data);
         alert("Login SuccessFull");
-        router.push("/pages/AllCampaigns");
-      } else {
+        router.push("/pages/AllCampaigns")
+    } else {
         console.error("Unexpected response:", response);
         alert("Login Failed");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
+    }
+} catch (error) {
+    if (axios.isAxiosError(error)) {
         // Axios-specific error
         alert("Login Failed");
         console.error("Axios error response:", error.response?.data);
-      } else {
+    } else {
         // Generic error handling
         console.error("Unexpected error:", error);
         alert("Login Failed");
