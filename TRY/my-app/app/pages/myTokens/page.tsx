@@ -6,7 +6,7 @@ import SubmitButton from "@/Components/SubmitButton";
 import axios from "axios";
 import { useState } from "react";
 
-export default function(){
+export default function myTokens(){
     
     const [wallet, setWalletAddress]=useState("");
     const [tokenName, setTokenName]=useState("");
