@@ -51,6 +51,11 @@ export default function TableDemo() {
     (acc, token) => acc + token.equity,
     0
   );
+  const copyHandler=(a)=>{
+    // alert(a);
+    console.log("a");
+    navigator.clipboard.writeText(a);
+  }
 
   return (
     <Table>
@@ -76,6 +81,7 @@ export default function TableDemo() {
               <TableCell className="font-medium">{token.tokenName}</TableCell>
               <TableCell>{token.tokenQuantity}</TableCell>
               <TableCell>{token.walletAddress}</TableCell>
+              <input type="button" onClick={()=>{copyHandler(token.walletAddress)}} value="Copy" className="bg-green-300 border-2 rounded border-black font-bold hover:ring-2 hover:bg-blue-200 hover:animate-bounce "></input>
               <TableCell className="text-right">{token.equity}</TableCell>
             </TableRow>
           ))
