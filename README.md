@@ -2,6 +2,10 @@
 
 A decentralized crowdfunding platform built on blockchain technology that connects entrepreneurs with angel investors, enabling secure and transparent fundraising through smart contracts and ERC20 tokens.
 
+## Project Demo Vedio 👇
+[![Eth Wallet Demo Video](https://img.youtube.com/vi/-zVqw-i94ac/0.jpg)](https://youtu.be/-zVqw-i94ac?si=aYbEvNfsMOHZLS6q)
+
+
 ## ✨ Features
 
 - 🔗 Smart contract-based crowdfunding campaigns
